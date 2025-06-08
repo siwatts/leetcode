@@ -145,6 +145,7 @@ int main(int argc, char* argv[])
     // Cleanup
     Solution::deleteList(l1);
     Solution::deleteList(l2);
+    Solution::deleteList(output);
 
     return 0;
 }
