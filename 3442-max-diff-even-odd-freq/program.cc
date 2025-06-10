@@ -38,24 +38,26 @@ public:
             }
         }
 
-        pair<char,int> maxOdd {'\0', 0};
-        pair<char,int> maxEven {'\0', 0};
+        pair<char,int> maxOdd {'\0', 0}; // a1
+        pair<char,int> minEven {'\0', 0}; // a2
 
         // Fancy new iterator looping
         for (auto& it: letters)
         {
-            // Log each letter keeping the highest count we've seen so far
+            // Log each letter keeping the best count we've seen so far
             char c = it.first;
             int n = it.second;
             if (n % 2 == 0)
             {
-                if (maxEven.second < n)
+                // Keep smallest even (that's not the initial 0)
+                if (minEven.second == 0 || minEven.second > n)
                 {
-                    maxEven = {c, n};
+                    minEven = {c, n};
                 }
             }
             else
             {
+                // Keep max odd
                 if (maxOdd.second < n)
                 {
                     maxOdd = {c, n};
@@ -63,10 +65,10 @@ public:
             }
         }
 
-        cout << "The highest even freq. char. count we found was for char '" << maxEven.first << "' freq. " << maxEven.second << endl;
         cout << "The highest odd freq. char. count we found was for char '" << maxOdd.first << "' freq. " << maxOdd.second << endl;
+        cout << "The lowest even freq. char. count we found was for char '" << minEven.first << "' freq. " << minEven.second << endl;
 
-        return abs(maxEven.second - maxOdd.second);
+        return maxOdd.second - minEven.second;
     }
 };
 
