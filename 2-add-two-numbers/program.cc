@@ -61,6 +61,11 @@ class Solution
             //cout << "Given " << input << " to parse\n";
             stack<int> digits;
             int digit;
+            if (input == 0)
+            {
+                // Special case if we get a 0 in the first place, need to output at least one digit!
+                digits.push(0);
+            }
             while (input != 0)
             {
                 // Pull off least significant digit
