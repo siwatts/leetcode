@@ -50,7 +50,7 @@ class Solution
                 printNode(node->next);
             }
         }
-        ListNode* makeListFromNumber(int input)
+        ListNode* makeListFromNumber(double input)
         {
             // 1st (biggest) digit of input is the last element of list
             // Since we make list starting from last element and link each next element
@@ -69,12 +69,12 @@ class Solution
             while (input != 0)
             {
                 // Pull off least significant digit
-                digit = input % 10;
+                digit = (int) fmod(input, 10.0); // floating pt. modulo (%)
                 digits.push(digit);
                 //cout << "Found digit " << digit << endl;
                 // Shift back by 10
                 input -= digit;
-                input = (int) (input / 10.0);
+                input = trunc(input / 10.0);
                 //cout << "Now " << input << endl;
             }
             //cout << "Done parsing input\n" << endl;
@@ -101,12 +101,12 @@ class Solution
             delete list;
         }
         // Solution
-        int numberFromList(ListNode* list)
+        double numberFromList(ListNode* list)
         {
             // Traverse over list which starts with the least signifcant bit
             // Increase the power of 10 for each digit we read by 1
             int powerten = 0;
-            int result = 0;
+            double result = 0;
             while (list != nullptr)
             {
                 result += pow(10, powerten) * list->val;
@@ -118,9 +118,9 @@ class Solution
         }
         ListNode* addTwoNumbers(ListNode* l1, ListNode* l2)
         {
-            int n1 = numberFromList(l1);
-            int n2 = numberFromList(l2);
-            int res = n1 + n2;
+            double n1 = numberFromList(l1);
+            double n2 = numberFromList(l2);
+            double res = n1 + n2;
             //cout << "Decoding list addition: " << n1 << " + " << n2 << " = " << res << "\n";
             return makeListFromNumber(res);
         }
