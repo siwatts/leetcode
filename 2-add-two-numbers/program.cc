@@ -36,17 +36,17 @@ class Solution
         void printList(ListNode* list)
         {
             //cout << "Printing list contents\n";
-            //cout << "[";
+            cout << "[";
             printNode(list);
-            //cout << "]\n";
+            cout << "]\n";
         }
         void printNode(ListNode* node)
         {
-            //cout << node->val;
+            cout << node->val;
             // Recursive
             if (node->next != nullptr)
             {
-                //cout << ",";
+                cout << ",";
                 printNode(node->next);
             }
         }
@@ -139,14 +139,18 @@ int main(int argc, char* argv[])
 
     Solution soln;
 
+    cout << "Test case 1\n";
     ListNode* l1 = soln.makeListFromNumber(342);
     ListNode* l2 = soln.makeListFromNumber(465);
+    cout << "l1 =  ";
     soln.printList(l1);
+    cout << "l2 =  ";
     soln.printList(l2);
 
     // Add together
     ListNode* output = soln.addTwoNumbers(l1, l2);
     // Display output
+    cout << "out = ";
     soln.printList(output);
 
     // Cleanup
