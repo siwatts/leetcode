@@ -81,6 +81,16 @@ class Solution
             // Make a list from the stack
             return makeListFromNumber(digits);
         }
+        void deleteList(ListNode* list)
+        {
+            if (list->next != nullptr)
+            {
+                // Call recursively, so it starts with the final element
+                deleteList(list->next);
+            }
+            delete list;
+        }
+        // Solution Below
         ListNode* makeListFromNumber(stack<int> digits)
         {
             // Make linked list, starting with last element (most significant bit)
@@ -96,39 +106,6 @@ class Solution
             }
             // List complete, and first node is the previously created one
             return prev;
-        }
-        void deleteList(ListNode* list)
-        {
-            if (list->next != nullptr)
-            {
-                // Call recursively, so it starts with the final element
-                deleteList(list->next);
-            }
-            delete list;
-        }
-        // Solution
-        double numberFromList(ListNode* list)
-        {
-            // Traverse over list which starts with the least signifcant bit
-            // Increase the power of 10 for each digit we read by 1
-            int powerten = 0;
-            double result = 0;
-            while (list != nullptr)
-            {
-                result += pow(10, powerten) * list->val;
-                powerten++;
-                // Get next node ready
-                list = list->next;
-            }
-            return result;
-        }
-        ListNode* addTwoNumbersAttempt1(ListNode* l1, ListNode* l2)
-        {
-            double n1 = numberFromList(l1);
-            double n2 = numberFromList(l2);
-            double res = n1 + n2;
-            //cout << "Decoding list addition: " << n1 << " + " << n2 << " = " << res << "\n";
-            return makeListFromNumber(res);
         }
         ListNode* addTwoNumbers(ListNode* l1, ListNode* l2)
         {
