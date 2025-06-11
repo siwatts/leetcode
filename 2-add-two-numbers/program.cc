@@ -50,6 +50,7 @@ class Solution
                 printNode(node->next);
             }
         }
+        // For local testing, website supplies a pre-made list
         ListNode* makeListFromNumber(double input)
         {
             // 1st (biggest) digit of input is the last element of list
@@ -77,9 +78,14 @@ class Solution
                 input = trunc(input / 10.0);
                 //cout << "Now " << input << endl;
             }
-            //cout << "Done parsing input\n" << endl;
+            // Make a list from the stack
+            return makeListFromNumber(digits);
+        }
+        ListNode* makeListFromNumber(stack<int> digits)
+        {
             // Make linked list, starting with last element (most significant bit)
             ListNode* prev = nullptr;
+            int digit;
             while (!digits.empty())
             {
                 digit = digits.top();
@@ -116,12 +122,49 @@ class Solution
             }
             return result;
         }
-        ListNode* addTwoNumbers(ListNode* l1, ListNode* l2)
+        ListNode* addTwoNumbersAttempt1(ListNode* l1, ListNode* l2)
         {
             double n1 = numberFromList(l1);
             double n2 = numberFromList(l2);
             double res = n1 + n2;
             //cout << "Decoding list addition: " << n1 << " + " << n2 << " = " << res << "\n";
+            return makeListFromNumber(res);
+        }
+        ListNode* addTwoNumbers(ListNode* l1, ListNode* l2)
+        {
+            // Traverse over lists which start with the least signifcant bit
+            // This is a clue that we can implement an adder and go digit by digit with a carry bit
+            // We'll construct our answer from the last significant bit onwards, but we
+            // need to construct the list backwards, so keep a stack as an intermediary
+            stack<int> res;
+
+            // Adder
+            int digit;
+            int a, b;
+            int carry = 0;
+            while (l1 != nullptr && l2 != nullptr)
+            {
+                // One list may run out before the other, so handle nullptr
+                a = (l1 != nullptr ? l1->val : 0);
+                b = (l2 != nullptr ? l2->val : 0);
+
+                digit = a + b + carry;
+                if (digit >= 10) {
+                    digit -= 10;
+                    carry = 1;
+                } else {
+                    carry = 0;
+                }
+                res.push(digit);
+                // Advance to next
+                if (l1 != nullptr) {
+                    l1 = l1->next;
+                }
+                if (l2 != nullptr) {
+                    l2 = l2->next;
+                }
+            }
+
             return makeListFromNumber(res);
         }
 };
