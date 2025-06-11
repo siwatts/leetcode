@@ -2,7 +2,7 @@
 
 public class Solution
 {
-    public static int Candy(int[] ratings)
+    public int Candy(int[] ratings)
     {
         // n children in a line
         // each with rating at index
@@ -44,7 +44,8 @@ public class Program
     {
         Console.WriteLine("Candy");
         int[] ratings = [1,0,2];
-        int output = Solution.Candy(ratings);
+        Solution soln = new Solution();
+        int output = soln.Candy(ratings);
         Console.WriteLine("Output: {0}", output);
 
         return 0;
