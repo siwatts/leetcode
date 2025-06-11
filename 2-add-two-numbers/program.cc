@@ -121,7 +121,7 @@ class Solution
             int digit;
             int a, b;
             int carry = 0;
-            while (l1 != nullptr && l2 != nullptr)
+            while (l1 != nullptr || l2 != nullptr || carry != 0)
             {
                 // One list may run out before the other, so handle nullptr here
                 // instead of adding list->val directly
@@ -163,8 +163,8 @@ int main(int argc, char* argv[])
     Solution soln;
 
     cout << "Test case 1\n";
-    ListNode* l1 = soln.makeListFromNumber(342);
-    ListNode* l2 = soln.makeListFromNumber(465);
+    ListNode* l1 = soln.makeListFromNumber(9999999);
+    ListNode* l2 = soln.makeListFromNumber(9999);
     cout << "l1 =  ";
     soln.printList(l1);
     cout << "l2 =  ";
