@@ -51,7 +51,8 @@ class Solution
             }
         }
         // For local testing, website supplies a pre-made list
-        ListNode* makeListFromNumber(double input)
+        //ListNode* makeListFromNumber(double input)
+        ListNode* makeListFromNumber(long long input)
         {
             // 1st (biggest) digit of input is the last element of list
             // Since we make list starting from last element and link each next element
@@ -70,7 +71,8 @@ class Solution
             while (input != 0)
             {
                 // Pull off least significant digit
-                digit = (int) fmod(input, 10.0); // floating pt. modulo (%)
+                //digit = (int) fmod(input, 10.0); // floating pt. modulo (%)
+                digit = input % 10; // floating pt. modulo (%)
                 digits.push(digit);
                 //cout << "Found digit " << digit << endl;
                 // Shift back by 10
