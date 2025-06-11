@@ -144,7 +144,8 @@ class Solution
             int carry = 0;
             while (l1 != nullptr && l2 != nullptr)
             {
-                // One list may run out before the other, so handle nullptr
+                // One list may run out before the other, so handle nullptr here
+                // instead of adding list->val directly
                 a = (l1 != nullptr ? l1->val : 0);
                 b = (l2 != nullptr ? l2->val : 0);
 
