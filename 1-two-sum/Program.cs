@@ -16,7 +16,6 @@ public class Solution
             for (int j = i + 1; j < nums.Length; j++)
             {
                 Console.WriteLine("For loop j = {0}", j);
-                // Dumb direct index access method, no fancy linq
                 if (nums[i] + nums[j] == target)
                 {
                     Console.WriteLine("Found target {0} at [{1}, {2}]", target, i, j);
