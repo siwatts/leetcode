@@ -21,32 +21,44 @@ public:
     int minMaxDifference(int num)
     {
         // Is there a better way than just brute force trying all 10 digits with 9 replacements each?
-        vector<int> out = { num };
+        // Smallest will be first non-zero digit -> 0 and largest will be first non-zero digit -> 9
+        // Unless it is already a 9, in which case it will be the first digit not a 9 after any 0's -> 9
         // TODO: Would it be faster to replace digits numerically? Powers of ten and modulo
-        string numstring = to_string(num);
-        string replacestring;
-        for (int i = 0; i < 10; i++)
+        string numString = to_string(num);
+        string replaceString;
+        int min;
+        int max;
+
+        auto pos = numString.find_first_not_of('0');
+        if (pos == string::npos)
         {
-            char a = to_string(i)[0];
-            if (numstring.find(a) == string::npos)
-            {
-                continue;
-            }
-            for (int j = 0; j < 10; j++)
-            {
-                if (i == j)
-                {
-                    continue;
-                }
-                char b = to_string(j)[0];
-                replacestring = numstring;
-                replace(replacestring.begin(), replacestring.end(), a, b);
-                int replace = stoi(replacestring);
-                out.push_back(replace);
-            }
+            // We have the number 0 as input
+            min = 0;
+            max = 9;
         }
-        int min = *min_element(out.begin(), out.end());
-        int max = *max_element(out.begin(), out.end());
+        else
+        {
+            char a = numString[pos];
+            // Minimum
+            replaceString = numString;
+            replace(replaceString.begin(), replaceString.end(), a, '0');
+            min = stoi(replaceString);
+            // Maximum
+            // If the first digit is already a 9, then we need to find the next digit after that which
+            // is not a 9 and replace that
+            // We offset the search because the next number may be a 0, but we don't want to hit any leading 0s
+            if (a == '9')
+            {
+                pos = numString.find_first_not_of('9', pos);
+                if (pos != string::npos)
+                {
+                    a = numString[pos];
+                }
+            }
+            replaceString = numString;
+            replace(replaceString.begin(), replaceString.end(), a, '9');
+            max = stoi(replaceString);
+        }
 
         int result = max - min;
         return result;
