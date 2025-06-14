@@ -30,29 +30,23 @@ public:
             char a = to_string(i)[0];
             if (numstring.find(a) == string::npos)
             {
-                cout << "Skip, no " << a << " digit found\n";
                 continue;
             }
             for (int j = 0; j < 10; j++)
             {
                 if (i == j)
                 {
-                    cout << "Skip case " << i << " -> " << j << "\n";
                     continue;
                 }
-                cout << "Testing " << i << " -> " << j << "\n";
                 char b = to_string(j)[0];
                 replacestring = numstring;
                 replace(replacestring.begin(), replacestring.end(), a, b);
-                cout << "Results: " << numstring << " -> " << replacestring;
                 int replace = stoi(replacestring);
-                cout << ", int: " << replace << "\n";
                 out.push_back(replace);
             }
         }
         int min = *min_element(out.begin(), out.end());
         int max = *max_element(out.begin(), out.end());
-        cout << "min: " << min << ", max: " << max << "\n";
 
         int result = max - min;
         return result;
