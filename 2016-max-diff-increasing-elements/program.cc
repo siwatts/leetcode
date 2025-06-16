@@ -13,6 +13,17 @@ public:
         int thisdiff;
         int minSoFar;
 
+        // We can pre-seed with a starting i that isn't 0, because
+        // if the 2nd element of the array is smaller than the 1st there's
+        // no point checking the 1st
+        // Be careful we don't run off the end of the array, if we hit the end
+        // it's fine the for loop will simply be skipped and -1 returned
+        int startingPos = 0;
+        while (startingPos < n-1 && nums[startingPos+1] < nums[startingPos])
+        {
+            startingPos++;
+        }
+
         for (int i = 0; i < n-1; i++)
         {
             if (i == 0 || nums[i] < minSoFar)
