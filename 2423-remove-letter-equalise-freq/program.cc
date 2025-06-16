@@ -62,6 +62,12 @@ public:
         {
             countFrequency[n]++;
         }
+        vector<int> counts;
+        for (auto &[count, freq] : countFrequency)
+        {
+            counts.push_back(count);
+            //cout << "Adding count " << count << " to counts\n";
+        }
 
         ////cout << "countFrequency\n";
         //for (auto &[c,f] : countFrequency)
@@ -81,15 +87,10 @@ public:
             // Apparently countFrequency.begin()->second does not work, so we extract the count into a variable
             // so that we can look up the frequency (the second of the pair) using the count (what should be the first
             // of the pair at countFrequency.begin()->first
-            vector<int> allTheCounts;
-            for (auto &[c,f] : countFrequency)
-            {
-                allTheCounts.push_back(c);
-            }
-            int onlyCount = allTheCounts[0];
+            int onlyCount = counts[0];
             //cout << "The only count we found is " << onlyCount << "\n";
             //cout << "if (countFrequency.size() == 1) == true\n";
-            if (countFrequency[1] > 1)
+            if (onlyCount == 1 && countFrequency[onlyCount] > 1)
             {
                 //cout << "if (countFrequency[1] > 1) == true\n";
                 // Count 1 = string of single letters, as long as this occurs more than once (freq > 1) so there is at least
@@ -117,12 +118,6 @@ public:
             return false;
         }
         // We now know we have exactly 2 different counts in our countFrequency map
-        vector<int> counts;
-        for (auto &[count, freq] : countFrequency)
-        {
-            counts.push_back(count);
-            //cout << "Adding count " << count << " to counts\n";
-        }
         int lowCount = min(counts[0], counts[1]);
         int highCount = max(counts[0], counts[1]);
         //cout << "lowCount = " << lowCount << "\nhighCount = " << highCount << "\n";
