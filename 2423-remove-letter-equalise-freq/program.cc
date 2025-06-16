@@ -94,20 +94,32 @@ public:
 int main(int argc, char* argv[])
 {
     cout << "2423-remove-letter-equalise-freq\n";
-    string input = "aca";
+    string input = "test";
     bool exp = true;
+    if (argc > 1)
+    {
+        input = argv[1];
+        if (argc > 2)
+        {
+            exp = atoi(argv[2]) == 1;
+        }
+    }
 
     Solution sol;
     bool result = sol.equalFrequency(input);
     cout << "Input: '" << input << "'\n";
     cout << "Output: '" << (result ? "True" : "False") << "'\n";
-    if (exp == result)
+    if (argc > 2)
     {
-        cout << "PASS\n";
-    }
-    else
-    {
-        cout << "FAIL\n";
+        cout << "Expected: '" << (exp ? "True" : "False") << "'\n";
+        if (exp == result)
+        {
+            cout << "PASS\n";
+        }
+        else
+        {
+            cout << "FAIL\n";
+        }
     }
 
     return 0;
