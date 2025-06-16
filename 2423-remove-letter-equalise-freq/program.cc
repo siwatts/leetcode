@@ -36,7 +36,11 @@ public:
         }
 
         // 2+ elements, so we require 1 count to be 1 higher than all the others which are the same
-        // OR we require 3 elements to be 1 e.g. 'abc' where any 1 can be removed
+        //      - 'aabbccc', count 2 frequency 2, count 3 frequency 1, remove the 'c'
+        // OR we require 1 count to be frequency 1, and all others (2 minimum) which are the same
+        //      - 'abbcc', count 1 frequency 1, count 2 frequency 2, remove the 'a'
+        // OR we require 3 elements to be frequency 1
+        //      - 'abc', count 1 frequency 3, remove any of 'a' 'b' 'c'
         unordered_map<int,int> countFrequency;
         for (auto &[c, n] : charFrequency)
         {
@@ -44,8 +48,9 @@ public:
         }
 
         // Now we have map of countFrequency, ie. how many times that character count has occurred
-        // We want to see 2 entries, a count with frequency of 2+, and a count 1 higher with frequency of 1
-        // OR we require 1 entry, a count of 1 with a freq. of 3 (the special case mentioned above 'abc')
+        // We want to see
+        // - 2 entries, a count with frequency of 2+, and a {count 1 higher OR count == 1} with frequency of 1
+        // - 1 entry, a count of 1 with a freq. of 3 (the special case mentioned above 'abc')
         if (countFrequency.size() == 1)
         {
             return countFrequency[1] == 3;
@@ -54,6 +59,8 @@ public:
         {
             return false;
         }
+        // We now know we have exactly 2 different counts in our countFrequency map of
+        // how many occurances we have for each count
         vector<int> counts;
         for (auto &[count, freq] : countFrequency)
         {
@@ -61,42 +68,47 @@ public:
         }
         int lowCount = min(counts[0], counts[1]);
         int highCount = max(counts[0], counts[1]);
-        if (highCount - lowCount != 1)
+        // Several edge cases to check
+        if (highCount - lowCount == 1)
         {
-            return false;
+            // 2 different character counts, separated by an occurance freq. of 1
+            // If one of them (higher) only occurs once, we can equalise by getting
+            // rid of that 1
+            // I.e. 10 char counts of 3 ('aaa', 'bbb', ...) and only 1 char count of 4 ('xxxx')
+            // then we can remove an x
+            if (countFrequency[highCount] == 1)
+                return true;
         }
-        else if (countFrequency[highCount] != 1)
+
+        if (lowCount == 1 && countFrequency[lowCount] == 1)
         {
-            return false;
-        }
-        else if (countFrequency[lowCount] < 2)
-        {
-            return false;
-        }
-        else
-        {
+            // The lower of the 2 counts is an occurance of 1, and it only occurs once
+            // So we simply remove that one char e.g. 'aaabbbcccdddeeef', remove an 'f'
             return true;
         }
+
+        return false;
     }
 };
 
 int main(int argc, char* argv[])
 {
     cout << "2423-remove-letter-equalise-freq\n";
+    string input = "aca";
+    bool exp = true;
 
     Solution sol;
-    bool result = sol.equalFrequency("test");
-    cout << "Input: 'test'\n";
-    if (result)
-        cout << "True\n";
+    bool result = sol.equalFrequency(input);
+    cout << "Input: '" << input << "'\n";
+    cout << "Output: '" << (result ? "True" : "False") << "'\n";
+    if (exp == result)
+    {
+        cout << "PASS\n";
+    }
     else
-        cout << "False\n";
-    result = sol.equalFrequency("abcc");
-    cout << "Input: 'abcc'\n";
-    if (result)
-        cout << "True\n";
-    else
-        cout << "False\n";
+    {
+        cout << "FAIL\n";
+    }
 
     return 0;
 }
