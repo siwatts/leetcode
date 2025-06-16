@@ -11,9 +11,19 @@ public:
         int n = nums.size();
         int diff = -1;
         int thisdiff;
+        int minSoFar;
 
         for (int i = 0; i < n-1; i++)
         {
+            if (i == 0 || nums[i] < minSoFar)
+            {
+                minSoFar = nums[i];
+            }
+            else
+            {
+                // Can skip this num[i] check as we've already tested a smaller num[i] against this num[j]
+                continue;
+            }
             for (int j = i+1; j < n; j++)
             {
                 thisdiff = nums[j] - nums[i];
