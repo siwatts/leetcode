@@ -27,14 +27,14 @@ public:
             for (int j = i+1; j < n; j++)
             {
                 thisdiff = nums[j] - nums[i];
-                if (thisdiff > 0 && thisdiff > diff)
+                if (thisdiff > diff)
                 {
                     diff = thisdiff;
                 }
             }
         }
 
-        return diff;
+        return diff == 0 ? -1 : diff;
     }
 };
 
