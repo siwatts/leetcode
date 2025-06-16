@@ -53,7 +53,7 @@ public:
         // - 1 entry, a count of 1 with a freq. of 3 (the special case mentioned above 'abc')
         if (countFrequency.size() == 1)
         {
-            return countFrequency[1] == 3;
+            return countFrequency[1] != 0;
         }
         else if (countFrequency.size() != 2)
         {
