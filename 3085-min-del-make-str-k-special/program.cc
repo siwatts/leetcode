@@ -18,9 +18,8 @@ Return the minimum number of characters you need to delete to make word
 k-special.
 */
 
-class Word
+class Solution
 {
-public:
     // Original
     string originalWord;
     int k;
@@ -30,14 +29,7 @@ public:
     long smallestCharCount;
     unordered_map<char,long> charCount;
 
-    Word(string word, int k) : originalWord(word), k(k)
-    {
-        // Build the char count map, so we can ignore the string from now on
-        for (auto& c : word)
-        {
-            charCount[c]++;
-        }
-    }
+public:
     // Return the baseline min deletions required that can be achieved without
     // fully deleting an entire char entirely
     long minimumDeletionsNoCharRemove()
@@ -67,8 +59,16 @@ public:
         }
         return remove;
     }
-    long findMinimumDeletions()
+    int minimumDeletions(string word, int k)
     {
+        // Build the char count map, so we can ignore the string from now on
+        for (auto& c : word)
+        {
+            charCount[c]++;
+        }
+        this->originalWord = word;
+        this->k = k;
+
         // Get a baseline
         long min = minimumDeletionsNoCharRemove();
 
@@ -101,16 +101,6 @@ public:
         //cout << "So best min we've seen is min = " << min << "\n";
 
         return min;
-    }
-};
-
-class Solution
-{
-public:
-    int minimumDeletions(string word, int k)
-    {
-        Word w(word, k);
-        return w.findMinimumDeletions();
     }
 };
 
