@@ -1,55 +1,72 @@
-﻿using System.IO;
+﻿
+public class Child
+{
+    public Child? PrevChild;
+    public Child? NextChild;
+    public int Rating;
+    private int candies = -1;
+    public Child(int rating, Child? prevChild = null, Child? nextChild = null)
+    {
+        this.Rating = rating;
+        this.PrevChild = prevChild;
+        this.NextChild = nextChild;
+    }
+    public int Candies
+    {
+        get
+        {
+            if (candies != -1)
+            {
+                return candies;
+            }
+            else
+            {
+                // Calculate it
+                candies = 1;
+                if (PrevChild != null)
+                {
+                    if (PrevChild.Rating < Rating)
+                    {
+                        // Need at least one more than them, bidirectional
+                        candies = Math.Max((int)candies, PrevChild.Candies + 1);
+                    }
+                }
+                if (NextChild != null)
+                {
+                    if (NextChild.Rating < Rating)
+                    {
+                        // Need at least one more than them, bidirectional
+                        candies = Math.Max((int)candies, NextChild.Candies + 1);
+                    }
+                }
+                return candies;
+            }
+        }
+    }
+}
 
 public class Solution
 {
     public int Candy(int[] ratings)
     {
-        // n children in a line
-        // each with rating at index
-        // must have at least 1 candy each
-        // higher rating = more candies than their immediate neighbours
-        // find min. no. of candies req'd
-
-        // Everyone must have at least 1 candy
-        int count = ratings.Length;
-        //int[] candies = Enumerable.Repeat(1, ratings.Length).ToArray<int>();
-
-        // Step through
-        // Find longest unbroken chains of increases and decreases, as the candies will stack
-        int increaseCount = 0;
-        int decreaseCount = 0;
-        for (int i = 1; i < ratings.Length; i++)
+        List<Child> children = ratings.Select(r => new Child(r)).ToList<Child>();
+        int n = children.Count;
+        if (n == 1)
         {
-            // If next child has higher than prev. then extra candy needed for one of them
-            if (ratings[i] > ratings[i - 1])
-            {
-                increaseCount++;
-                // Account for candies in the increase chain up to now
-                // 1 increase = 1, 3 consecutive increases = 3 + 2 + 1 and so on
-                count += increaseCount;
-            }
-            else if (increaseCount != 0)
-            {
-                // Reset
-                increaseCount = 0;
-            }
-
-            // If next child has lower than prev. then extra candy needed for one of them
-            if (ratings[i] < ratings[i - 1])
-            {
-                decreaseCount++;
-                // Account for candies in the decrease chain up to now
-                // 1 decrease = 1, 3 consecutive decreases = 3 + 2 + 1 and so on
-                count += decreaseCount;
-            }
-            else if (decreaseCount != 0)
-            {
-                // Reset
-                decreaseCount = 0;
-            }
+            // Special case, nothing to link if there's only 1 child
+            return 1;
+        }
+        // Go through and link them
+        // All but first and last are bidirectional
+        children[0].NextChild = children[1];
+        children[n-1].PrevChild = children[n-2];
+        for (int i = 1; i < n - 1; i++)
+        {
+            children[i].NextChild = children[i+1];
+            children[i].PrevChild = children[i-1];
         }
 
-        return count;
+        return children.Sum(c => c.Candies);
     }
 }
 
