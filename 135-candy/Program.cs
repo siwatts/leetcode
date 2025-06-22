@@ -28,7 +28,7 @@ public class Child
                     if (PrevChild.Rating < Rating)
                     {
                         // Need at least one more than them, bidirectional
-                        candies = Math.Max((int)candies, PrevChild.Candies + 1);
+                        candies = Math.Max(candies, PrevChild.Candies + 1);
                     }
                 }
                 if (NextChild != null)
@@ -36,7 +36,7 @@ public class Child
                     if (NextChild.Rating < Rating)
                     {
                         // Need at least one more than them, bidirectional
-                        candies = Math.Max((int)candies, NextChild.Candies + 1);
+                        candies = Math.Max(candies, NextChild.Candies + 1);
                     }
                 }
                 return candies;
