@@ -27,18 +27,18 @@ public:
             }
         }
 
-        set<int> ind;
+        vector<int> out;
+        int nextStart = 0;
         for (int i : keyInd)
         {
-            int start = (i - k) >= 0 ? i - k : 0;
+            int start = (i - k) >= nextStart ? i - k : nextStart;
             int end = (i + k) < N ? i + k : N-1;
             for (int j = start; j <= end; j++)
             {
-                ind.insert(j);
+                out.push_back(j);
             }
+            nextStart = end + 1;
         }
-
-        vector<int> out(ind.begin(), ind.end());
 
         return out;
     }
