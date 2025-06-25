@@ -27,15 +27,19 @@ public:
             val = nums[mid];
             if (val < target)
             {
+                if (left == mid)
+                    break;
                 left = mid;
             }
             else if (val > target)
             {
+                if (right == mid)
+                    break;
                 right = mid;
             }
             mid = left + (int)((right - left) / 2.0);
         }
-        while (val != target && left != mid);
+        while (val != target);
 
         if (val == target)
             return mid;
@@ -48,9 +52,9 @@ int main(int argc, char* argv[])
 {
     cout << "704-binary-search\n";
 
-    vector<int> nums = { -1,0,3,5,9,12 };
-    int target = 9;
-    int exp = 4;
+    vector<int> nums = { 2,5 };
+    int target = 2;
+    int exp = 0;
 
     Solution sol;
     int res = sol.search(nums, target);
