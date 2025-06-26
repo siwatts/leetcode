@@ -12,7 +12,7 @@ In Pascal's triangle, each number is the sum of the two numbers directly above i
 class Solution
 {
 public:
-    void populateRow(int n, vector<int>& prevRow, vector<int>& row)
+    vector<int> getRow(int n, vector<int>& prevRow)
     {
         if (n == 0)
         {
@@ -24,10 +24,12 @@ public:
         }
         else
         {
+            vector<int> row(n+1);
             for (int i = 0; i < n+1; i++)
             {
                 row[i] = (i-1 < 0 ? 0 : prevRow[i-1]) + (i >= n ? 0 : prevRow[i]);
             }
+            return row;
         }
     }
     vector<vector<int>> generate(int numRows)
@@ -43,8 +45,7 @@ public:
 
         for (int row = 1; row < numRows; row++)
         {
-            vector<int> newRow(row+1);
-            populateRow(row, res[row-1], newRow);
+            vector<int> newRow = getRow(row, res[row-1]);
             res.push_back(newRow);
         }
 
