@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -28,21 +29,12 @@ public:
             }
             else
             {
-                int iMin = 0;
-                int min = res[0];
                 // Find min. value in res so far
-                for (int i = 1; i < res.size(); i++)
+                auto min = min_element(res.begin(), res.end());
+                // If n greater, replace min value (not just the first lower value we find)
+                if (n > *min)
                 {
-                    if (min > res[i])
-                    {
-                        min = res[i];
-                        iMin = i;
-                    }
-                }
-                // If n greater, replace min value (not just the first we find)
-                if (n > min)
-                {
-                    res.erase(res.begin()+iMin);
+                    res.erase(min);
                     res.push_back(n);
                 }
             }
