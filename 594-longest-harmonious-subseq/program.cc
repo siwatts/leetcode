@@ -23,15 +23,15 @@ public:
             numFreq[n]++;
         }
 
-        vector<int> lengths;
+        int len = 0;
         for (auto [n,f] : numFreq)
         {
             if (numFreq.find(n+1) != numFreq.end())
             {
-                lengths.push_back(numFreq[n] + numFreq[n+1]);
+                len = max(len, numFreq[n]+numFreq[n+1]);
             }
         }
-        return (lengths.size() != 0) ? *max_element(lengths.begin(),lengths.end()) : 0;
+        return len;
     }
 };
 
