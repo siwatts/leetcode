@@ -17,30 +17,21 @@ class Solution
 public:
     int findLHS(vector<int>& nums)
     {
-        // We require a sorted array
-        sort(nums.begin(), nums.end());
-        // Brute force starting +1 difference arrays at various starting values nums[i]
-        // and make vector to hold the resulting span sizes
-        vector<int> spans;
-        spans.resize(nums.size(), 1);
-        // Loop possible starting values
-        for (int i = 0; i < nums.size(); i++)
+        unordered_map<int,int> numFreq;
+        for (auto n : nums)
         {
-            int start = nums[i];
-            for (int j = i+1; j < nums.size(); j++)
-            {
-                if (nums[j] - start <= 1)
-                {
-                    spans[i]++;
-                }
-                else
-                {
-                    break;
-                }
-            }
+            numFreq[n]++;
         }
 
-        return *max_element(spans.begin(), spans.end());
+        vector<int> lengths;
+        for (auto [n,f] : numFreq)
+        {
+            if (numFreq.find(n+1) != numFreq.end())
+            {
+                lengths.push_back(numFreq[n] + numFreq[n+1]);
+            }
+        }
+        return (lengths.size() != 0) ? *max_element(lengths.begin(),lengths.end()) : 0;
     }
 };
 
