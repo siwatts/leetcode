@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -7,16 +8,16 @@ class Solution
 public:
     string forever(string word)
     {
-        // TODO: String stream will be more efficient
-        string second = "";
+        stringstream next;
+        next << word;
         for (char c : word)
         {
             if (c == 'z')
-                second += 'a';
+                next << 'a';
             else
-                second += (c+1);
+                next << (char)(c+1);
         }
-        return word + second;
+        return next.str();
     }
     char kthCharacter(int k)
     {
