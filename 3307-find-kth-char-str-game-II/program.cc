@@ -8,32 +8,25 @@ using namespace std;
 class Solution
 {
 public:
-    string operation(string word, int op)
+    char operation(char c, int op)
     {
-        stringstream next;
-        next << word;
         switch (op)
         {
             case 0:
                 // Duplicate and append word
-                next << word;
-                break;
+                // Char remains unchanged
+                return c;
             case 1:
                 // "Forever" operation from 3304 part I, increment each char. then append to word
-                for (char c : word)
-                {
-                    if (c == 'z')
-                        next << 'a';
-                    else
-                        next << (char)(c+1);
-                }
-                break;
+                if (c == 'z')
+                    return 'a';
+                else
+                    return (char)(c+1);
             default:
                 cout << "Invalid operation code '" << op << "'\n";
                 throw invalid_argument("op");
                 break;
         }
-        return next.str();
     }
     char kthCharacter(int k, vector<int> operations)
     {
@@ -48,15 +41,24 @@ public:
         // for *every* char in the word at once, repeat
         // until we hit at least length k, return kth char
         // Wrap around from z -> a
+        //
+        // Actually we only need to track 1 ancestor char for each operation
+        // We know whether or not the operation will be applied to our char based
+        // on the binary representation of k
         int i = 0;
+        char c = word[0];
         for (auto op : operations)
         {
             if (i++ == n)
                 break;
-            word = operation(word, op);
+            // Operation only applied if the nth digit of k as a binary number is 1
+            // as this shows the common ancestor char. in each operation (whether it comes from
+            // the 1st or 2nd half of the string)
+            if (k & (1 << i))
+                c = operation(c, op);
         }
 
-        return word[k-1];
+        return c;
     }
 };
 
