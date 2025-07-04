@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <cmath>
 
 using namespace std;
 
@@ -38,12 +39,20 @@ public:
     {
         string word = "a";
 
+        // n operations required to generate char k are ceil(log2(k)) = (int)log2(k)+1
+        // Add +1 to make sure k is in the 1st half of the resulting string, after this
+        // point all remaining operations do not affect char at k
+        int n = (int)(log2(k)+1)+1;
+
         // Generate new string by appending next char in alphabet to word
         // for *every* char in the word at once, repeat
         // until we hit at least length k, return kth char
         // Wrap around from z -> a
+        int i = 0;
         for (auto op : operations)
         {
+            if (i++ == n)
+                break;
             word = operation(word, op);
         }
 
