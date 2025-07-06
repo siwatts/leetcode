@@ -25,17 +25,37 @@ Implement the FindSumPairs class:
 class FindSumPairs
 {
 private:
-    vector<int> nums1;
-    vector<int> nums2;
+    int n1size;
+    int n2size;
+    vector<vector<int>> sums;
 public:
     FindSumPairs(vector<int>& nums1, vector<int>& nums2)
-        : nums1(nums1), nums2(nums2)
     {
+        n1size = nums1.size();
+        n2size = nums2.size();
+        // Empty matrix to contain results
+        for (int i = 0; i < nums1.size(); i++)
+        {
+            vector<int> v(nums2.size());
+            sums.push_back(v);
+        }
+        // Compute all sums and store result
+        for (int i = 0; i < nums1.size(); i++)
+        {
+            for (int j = 0; j < nums2.size(); j++)
+            {
+                sums[i][j] = nums1[i] + nums2[j];
+            }
+        }
     }
 
     void add(int index, int val)
     {
-        nums2[index] += val;
+        // Update cached sums too
+        for (int i = 0; i < n1size; i++)
+        {
+            sums[i][index] += val;
+        }
     }
 
     int count(int tot)
@@ -43,11 +63,11 @@ public:
         // Count the number of pairs (i, j) such that nums1[i] + nums2[j] equals a
         // given value (0 <= i < nums1.length and 0 <= j < nums2.length).
         int c = 0;
-        for (auto n1 : nums1)
+        for (auto vec : sums)
         {
-            for (auto n2 : nums2)
+            for (auto v : vec)
             {
-                if (n1 + n2 == tot)
+                if (v == tot)
                 {
                     c++;
                 }
