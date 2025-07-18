@@ -1,6 +1,8 @@
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 #include <algorithm>
+#include <set>
 
 using namespace std;
 
@@ -27,42 +29,19 @@ In this situation, minimum = most negative
 class Solution
 {
 public:
-    long long minimumDifference(vector<int>& first, vector<int>& second, int n)
+    long long minimumDifference(multiset<int>& first, multiset<int>& second, int n)
     {
         long long sumfirst = 0;
         long long sumsecond = 0;
-        if (first.size() == n)
+        auto fit = first.begin();
+        auto sit = second.rbegin();
+        for (int i = 0; i < n; i++)
         {
-            for (auto f : first)
-            {
-                sumfirst += f;
-            }
-        }
-        else
-        {
-            sort(first.begin(), first.end());
-            // Most negative, so sorted to beginning
-            for (int i = 0; i < n; i++)
-            {
-                sumfirst += first[i];
-            }
-        }
-        if (second.size() == n)
-        {
-            for (auto s : second)
-            {
-                sumsecond += s;
-            }
-        }
-        else
-        {
-            sort(second.begin(), second.end());
-            // Want most positive, so take n elements from end
-            int last = second.size() - 1;
-            for (int i = 0; i < n; i++)
-            {
-                sumsecond += second[last-i];
-            }
+            sumfirst += *fit;
+            fit++;
+            // Want most positive, so take n elements from end not beginning
+            sumsecond += *sit;
+            sit++;
         }
         return sumfirst - sumsecond;
     }
@@ -90,13 +69,24 @@ public:
 
         // Do we just have to brute force all n possibilities?
         // From min/maxing every division from n|2n, n+1|2n-1, ..., 2n-1|n+1, 2n|n ?
-        vector<int> first(nums.begin(), nums.begin()+n);
-        vector<int> second(nums.begin()+n, nums.end());
+        multiset<int> first(nums.begin(), nums.begin()+n); // First 1/3
+        multiset<int> second(nums.begin()+n, nums.end()); // Last 2/3
         long long minDiff = minimumDifference(first, second, n);
-        for (int i = 1; i <= n; i++)
+        for (int i = 0; i < n; i++)
         {
-            first = vector<int>(nums.begin(), nums.begin()+n+i);
-            second = vector<int>(nums.begin()+n+i, nums.end());
+            // Iterate through until we get to first 2/3, last 1/3
+            int elem = nums[n+i];
+            first.insert(elem);
+            auto it = second.find(elem);
+            if (it != second.end())
+            {
+                second.erase(it); // Only remove the first we found, if multiple
+            }
+            else
+            {
+                throw runtime_error("Didn't find second multimap value " + to_string(elem) + " for removal");
+            }
+            // Keep new diff if better
             minDiff = min(minDiff, minimumDifference(first, second, n));
         }
 
