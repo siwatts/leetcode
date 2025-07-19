@@ -26,7 +26,7 @@ public class Solution
         List<string> res = new List<string>();
         foreach (var f in folder)
         {
-            List<string> dirNames = f.Split('/').ToList<string>();
+            List<string> dirNames = f.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToList<string>();
             bool isSubDir = false;
             if (dirNames.Count != 1)
             {
