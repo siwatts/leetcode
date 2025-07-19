@@ -18,26 +18,28 @@ public class Solution
 {
     public IList<string> RemoveSubfolders(string[] folder)
     {
-        // Initialise to dictionary with strings -> key, and every value to 1
+        // Initialise to dictionary with strings -> key, and value to the count
         // There will be an exception if there are duplicate keys
-        // If this exists in the test data use .Distinct first.
-        Dictionary<string, int> paths = folder.ToDictionary(x => x, x => 1);
+        // If this exists in the test data use .Distinct first
+        // No duplicate paths found in test cases, so we can reduce to a HashSet
+        HashSet<string> paths = new HashSet<string>(folder);
 
         List<string> res = new List<string>();
         foreach (var f in folder)
         {
             List<string> dirNames = f.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToList<string>();
             bool isSubDir = false;
+            // It can't be a sub-dir if there's only 1 dir.
             if (dirNames.Count != 1)
             {
-                // Check if it is a subdir of any others in the dict.
+                // Check if this entry is a subdir of any others in the dict.
                 // For this we need to gradually combine from the root up and test
-                // each, e.g. '/a/b/c/d` we should test `/a`, `/a/b`, `/a/b/c`
+                // each combination, e.g. '/a/b/c/d` we should test `/a`, `/a/b`, `/a/b/c`
                 string baseDir = "";
                 for (int i = 0; i < dirNames.Count-1; i++)
                 {
                     baseDir += "/" + dirNames[i];
-                    if (paths.ContainsKey(baseDir))
+                    if (paths.Contains(baseDir))
                     {
                         isSubDir = true;
                         break;
