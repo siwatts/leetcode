@@ -18,25 +18,22 @@ of a, that is, if it is equal to a[l],a[l+1],...,a[r] for some (l,r).
 class Solution
 {
 public:
-    int maximumUniqueSubarray(vector<int>& nums)
+    int maximumUniqueSubarray(vector<int>& nums, int startingPos)
     {
         // Need to find the longest unique subarray and sum it
         set<int> nSet;
         // Pre-seed with first value, incase we have all negative elements (simply
         // seeding with sum = 0 may not be correct)
-        int n = nums[0];
+        int n = nums[startingPos];
         nSet.insert(n);
         int sum = n;
-        int maxSum = n;
-        for (int i = 1; i < nums.size(); i++)
+        for (int i = startingPos+1; i < nums.size(); i++)
         {
             n = nums[i];
             if (nSet.contains(n))
             {
-                // Reset, start new unique subarray
-                nSet.clear();
-                maxSum = max(maxSum, sum);
-                sum = 0;
+                // Finished, return what we found
+                return sum;
             }
             else
             {
@@ -45,8 +42,17 @@ public:
                 sum += n;
             }
         }
-
-        return maxSum;
+        // We might hit the end without finding any duplicates, return what we found
+        return sum;
+    }
+    int maximumUniqueSubarray(vector<int>& nums)
+    {
+        int sum = maximumUniqueSubarray(nums, 0);
+        for (int i = 1; i < nums.size(); i++)
+        {
+            sum = max(sum, maximumUniqueSubarray(nums, i));
+        }
+        return sum;
     }
 };
 
