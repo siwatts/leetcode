@@ -18,39 +18,40 @@ of a, that is, if it is equal to a[l],a[l+1],...,a[r] for some (l,r).
 class Solution
 {
 public:
-    int maximumUniqueSubarray(vector<int>& nums, int startingPos)
+    int maximumUniqueSubarray(vector<int>& nums)
     {
-        // Need to find the longest unique subarray and sum it
         set<int> nSet;
-        // Pre-seed with first value, incase we have all negative elements (simply
-        // seeding with sum = 0 may not be correct)
-        int n = nums[startingPos];
-        nSet.insert(n);
+        auto left = nums.begin();
+        auto right = nums.begin()+1;
+        int n = *left;
         int sum = n;
-        for (int i = startingPos+1; i < nums.size(); i++)
+        int maxSum = sum;
+        nSet.insert(n);
+        // Sliding window approach with 2 pointers (iterators)
+        // Move right forwards keeping the sum as we go, until
+        // we hit a duplicate number, then move left forwards until
+        // the duplicate is removed
+        while (left != nums.end() && right != nums.end())
         {
-            n = nums[i];
+            n = *right;
             if (nSet.contains(n))
             {
-                // Finished, return what we found
-                return sum;
+                while (left != nums.end() && *left != n)
+                {
+                    sum -= *left;
+                    nSet.erase(*left);
+                    left++;
+                }
+                // now left == n, we can remove it and continue
+                left++;
             }
             else
             {
-                // Keep going
-                nSet.insert(n);
                 sum += n;
+                maxSum = max(maxSum, sum);
+                nSet.insert(n);
             }
-        }
-        // We might hit the end without finding any duplicates, return what we found
-        return sum;
-    }
-    int maximumUniqueSubarray(vector<int>& nums)
-    {
-        int sum = maximumUniqueSubarray(nums, 0);
-        for (int i = 1; i < nums.size(); i++)
-        {
-            sum = max(sum, maximumUniqueSubarray(nums, i));
+            right++;
         }
         return sum;
     }
