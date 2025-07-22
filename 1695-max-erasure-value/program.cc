@@ -53,7 +53,7 @@ public:
             }
             right++;
         }
-        return sum;
+        return maxSum;
     }
 };
 
