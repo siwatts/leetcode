@@ -22,16 +22,24 @@ public:
     {
         // We are finding the max of 2 heights, such that we maximise min(h1,h2)*(x2-x1)
 
-        // Bruteforce?
+        // "2 pointers", come in from the outsides instead of recursively trying
+        // every combination
         int n = height.size();
         int maxVol = 0;
         int vol;
-        for (int i = 0; i < n; i++)
+        int i = 0;
+        int j = n-1;
+        while (i < n && j >= 0)
         {
-            for (int j = i+1; j < n; j++)
+            vol = min(height[i], height[j]) * (j - i);
+            maxVol = max(maxVol, vol);
+            if (height[i] < height[j])
             {
-                vol = min(height[i], height[j]) * (j - i);
-                maxVol = max(maxVol, vol);
+                i++;
+            }
+            else
+            {
+                j--;
             }
         }
 
