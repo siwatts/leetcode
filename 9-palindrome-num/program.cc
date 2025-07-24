@@ -18,8 +18,8 @@ public:
         // We can either convert to string, or strip digits one by one
         // Can we reverse the number mathematically to compare that way without
         // stripping individual digits?
-        int before = x;
-        int after = 0;
+        const int before = x;
+        long long after = 0;
         int digit;
         while (x > 0)
         {
@@ -28,8 +28,6 @@ public:
             after *= 10;
             after += digit;
         }
-
-        cout << "before = " << before << ", after = " << after << "\n";
 
         return before == after;
     }
