@@ -24,7 +24,9 @@ public:
     {
         auto n = nums | views::filter([] (auto const& x) { return x > 0; } );
         nums = vector<int>(n.begin(), n.end());
-        unique(nums.begin(), nums.end());
+        sort(nums.begin(), nums.end());
+        auto last = unique(nums.begin(), nums.end());
+        nums.erase(last, nums.end());
         int sum = accumulate(nums.begin(), nums.end(), 0);
 
         return sum;
