@@ -22,12 +22,20 @@ class Solution
 public:
     int maxSum(vector<int>& nums)
     {
-        auto n = nums | views::filter([] (auto const& x) { return x > 0; } );
-        nums = vector<int>(n.begin(), n.end());
-        sort(nums.begin(), nums.end());
-        auto last = unique(nums.begin(), nums.end());
-        nums.erase(last, nums.end());
-        int sum = accumulate(nums.begin(), nums.end(), 0);
+        // C++23:
+        //auto n = nums | views::filter([] (auto const& x) { return x > 0; } );
+        //nums = vector<int>(n.begin(), n.end());
+        // Leetcode friendly pre-C++23 standard:
+        vector<int> filtered;
+        for (auto n: nums)
+        {
+            if (n > 0)
+                filtered.push_back(n);
+        }
+        sort(filtered.begin(), filtered.end());
+        auto last = unique(filtered.begin(), filtered.end());
+        filtered.erase(last, filtered.end());
+        int sum = accumulate(filtered.begin(), filtered.end(), 0);
 
         return sum;
     }
