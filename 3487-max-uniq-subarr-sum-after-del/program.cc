@@ -36,13 +36,7 @@ public:
         {
             // There were no elements > 0, but we still require a non-empty
             // vector for the problem so keep the least negative element
-            int max = nums[0];
-            for (unsigned int i = 1; i < nums.size(); i++)
-            {
-                if (nums[i] > max)
-                    max = nums[i];
-            }
-            return max;
+            return *max_element(nums.begin(), nums.end());
         }
         sort(filtered.begin(), filtered.end());
         auto last = unique(filtered.begin(), filtered.end());
