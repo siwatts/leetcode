@@ -22,15 +22,27 @@ class Solution
 public:
     int maxSum(vector<int>& nums)
     {
-        // C++23:
+        // C++20:
         //auto n = nums | views::filter([] (auto const& x) { return x > 0; } );
         //nums = vector<int>(n.begin(), n.end());
-        // Leetcode friendly pre-C++23 standard:
+        // Leetcode friendly pre-C++20 standard:
         vector<int> filtered;
         for (auto n: nums)
         {
             if (n > 0)
                 filtered.push_back(n);
+        }
+        if (filtered.size() == 0)
+        {
+            // There were no elements > 0, but we still require a non-empty
+            // vector for the problem so keep the least negative element
+            int max = nums[0];
+            for (unsigned int i = 1; i < nums.size(); i++)
+            {
+                if (nums[i] > max)
+                    max = nums[i];
+            }
+            return max;
         }
         sort(filtered.begin(), filtered.end());
         auto last = unique(filtered.begin(), filtered.end());
