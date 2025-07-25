@@ -20,20 +20,13 @@ public:
     int maxProfit(vector<int>& prices)
     {
         int profit = 0;
-        if (prices.size() < 2)
-            return profit;
-
-        auto it1 = prices.begin();
-        auto it2 = prices.begin() + 1;
-        while (it1 != prices.end() && it2 != prices.end())
+        for (unsigned int i = 1; i < prices.size(); i++)
         {
-            if (*it2 > *it1)
+            if (prices[i] > prices[i-1])
             {
                 // Buy day1 and sell day2
-                profit += *it2 - *it1;
+                profit += prices[i] - prices[i-1];
             }
-            it1++;
-            it2++;
         }
 
         return profit;
