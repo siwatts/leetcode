@@ -105,6 +105,9 @@ public:
     }
     string multiply(string num1, string num2)
     {
+        // Edge case
+        if (num1 == "0" || num2 == "0")
+            return "0";
         // To multiply 2 numbers we go digit by digit, we sum the result
         // of every digit of num1 multiplied by every digit of num2
         string result = "0";
