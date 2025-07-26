@@ -18,41 +18,44 @@ private:
 public:
     string add(string num1, string num2, int powTen)
     {
-        cout << "add('" << num1 << "', '" << num2 << "', " << powTen << ")\n";
+        //cout << "DEBUG: add(string '" << num1 << "', string '" << num2 << "', int " << powTen << ")\n";
         // 2nd argument raised to the power of ten provided
         // i.e. append that many 0s
         for (int i = 0; i < powTen; i++)
         {
             num2 += "0";
         }
+        //cout << "DEBUG add(: num1 = '" << num1 << "', num2 = '" << num2 << "'\n";
         //
-        auto it1 = num1.rbegin();
-        auto it2 = num2.rbegin();
+        int i = num1.length() - 1;
+        int j = num2.length() - 1;
         bool carry = false;
         char d1, d2;
         deque<char> result;
         // No easy way to add to beginning of sstream, so let's use a collection
         // insert at the beginning as we go, then convert to string at the end
-        while (it1 != num1.rend() && it2 != num2.rend())
+        while (i != -1 || j != -1)
         {
-            if (it1 != num1.rend())
+            //cout << "DEBUG add(: while\n";
+            if (i != -1)
             {
-                d1 = *it1;
+                d1 = num1[i];
                 d1 = d1-zero;
             }
             else
             {
                 d1 = 0;
             }
-            if (it2 != num2.rend())
+            if (j != -1)
             {
-                d2 = *it2;
+                d2 = num2[j];
                 d2 = d2-zero;
             }
             else
             {
                 d2 = 0;
             }
+            //cout << "DEBUG add(: (int)d1 = " << (int)d1 << ", (int)d2 = " << (int)d2 << "\n";
             d2 = d1 + d2 + (carry ? 1 : 0);
             if (d2 >= 10)
             {
@@ -63,15 +66,23 @@ public:
             {
                 carry = false;
             }
+            //cout << "DEBUG add(: (int)d2 = " << (int)d2 << ", carry = " << (carry ? "True" : "False") << "\n";
             d2 = d2 + zero;
+            //cout << "DEBUG add(: d2 = '" << d2 << "'\n";
             result.push_front(d2);
-            if (it1 != num1.rend())
+            //cout << "DEBUG add(: result = [";
+            //for (auto d : result)
+            //{
+            //    cout << d << ",";
+            //}
+            //cout << "]\n";
+            if (i != -1)
             {
-                it1++;
+                i--;
             }
-            if (it2 != num2.rend())
+            if (j != -1)
             {
-                it2++;
+                j--;
             }
         }
         if (carry)
@@ -80,39 +91,30 @@ public:
         }
         // Now convert it to a string
         string res = string(result.begin(), result.end());
-        cout << "add() = " << res << "\n";
+        //cout << "DEBUG add(: result = '" << res << "'\n";
         return res;
     }
     string multiply(char num1, char num2)
     {
-        cout << "multiply(char '" << num1 << "', char '" << num2 << "')\n";
+        //cout << "DEBUG: multiply(char '" << num1 << "', char '" << num2 << "')\n";
         num1 = num1-zero;
         num2 = num2-zero;
         char res = num1 * num2;
-        res += zero;
-        cout << "multiply() = " << res << "\n";
-        return to_string(res);
+        //cout << "DEBUG: multiply() = " << (int)res << "\n";
+        return to_string((int)res);
     }
     string multiply(string num1, string num2)
     {
         // To multiply 2 numbers we go digit by digit, we sum the result
         // of every digit of num1 multiplied by every digit of num2
         string result = "0";
-        int i = 0, j = 0;
-        auto it1 = num1.rbegin();
-        auto it2 = num2.rbegin();
-        while (it1 != num1.rend() && it2 != num2.rend())
+        int N = num1.length();
+        int M = num2.length();
+        for (int i = 0; i < N; i++)
         {
-            result = add(result, multiply(*it1, *it2), i+j);
-            if (it1 != num1.rend())
+            for (int j = 0; j < M; j++)
             {
-                it1++;
-                i++;
-            }
-            if (it2 != num2.rend())
-            {
-                it2++;
-                j++;
+                result = add(result, multiply(num1[N-1-i], num2[M-1-j]), i+j);
             }
         }
         return result;
