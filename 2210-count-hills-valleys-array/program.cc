@@ -32,15 +32,13 @@ public:
             return 0;
 
         int count = 0;
+        // Lets examine adjacent array elements a,b,c with indices j-1,j,j+1
         int a,b,c;
-        int i,k;
         for (size_t j = 1; j < nums.size()-1; j++)
         {
-            i = j-1;
-            k = j+1;
-            a = nums[i];
-            b = nums[j];
-            c = nums[k];
+            a = nums[j-1];
+            b = nums[ j ];
+            c = nums[j+1];
             if (a < b && c < b)
             {
                 // Hill
