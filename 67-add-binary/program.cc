@@ -21,6 +21,7 @@ public:
         while (i < N || i < M)
         {
             digit = carry;
+            carry = 0;
             if (i < N)
                 digit += a[N-1-i] - '0';
             if (i < M)
