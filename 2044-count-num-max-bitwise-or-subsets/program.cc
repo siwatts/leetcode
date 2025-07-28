@@ -23,27 +23,31 @@ class Solution
 private:
     unordered_map<int,int> bitwiseOrScores;
 public:
+    bool debugPrint = false;
     int countMaxOrSubsets(vector<int>& nums)
     {
         int permutations = pow(2, nums.size());
         int maxScore = 0;
         int score;
         int mask;
-        for (int i = 1; i <= permutations; i++)
+        for (int i = 1; i < permutations; i++)
         {
             // Use this binary number i as a bitmask so we try every combination
-            // of elements
+            // of elements, e.g. size 4 we run 0001 to 1111
+            if (debugPrint) cout << "DEBUG: Permutation i = " << i << "\n";
             score = 0;
             mask = i;
             int j = 0;
             while (mask > 0)
             {
+                if (debugPrint) cout << "DEBUG: mask = " << mask << "\n";
                 if (mask & 1)
                 {
+                    if (debugPrint) cout << "DEBUG: using j = " << j << "\n";
                     score |= nums[j];
                 }
                 j++;
-                mask = mask << 1;
+                mask = mask >> 1;
             }
             bitwiseOrScores[score]++;
             maxScore = max(maxScore, score);
@@ -81,9 +85,18 @@ int main(int argc, char* argv[])
     cout << "], exp = " << exp << "\n";
 
     Solution sol;
+    sol.debugPrint = true;
     int res = sol.countMaxOrSubsets(nums);
 
     cout << "Output: res = " << res << "\n";
+    if (exp == res)
+    {
+        cout << "Test: PASS\n";
+    }
+    else
+    {
+        cout << "Test: FAIL\n";
+    }
 
     return 0;
 }
