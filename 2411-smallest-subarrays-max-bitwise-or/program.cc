@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <array>
+#include <algorithm>
 
 using namespace std;
 
@@ -23,33 +25,37 @@ A subarray is a contiguous non-empty sequence of elements within an array.
 
 class Solution
 {
-private:
 public:
-    bool DebugPrint = false;
     vector<int> smallestSubarrays(vector<int>& nums)
     {
         int n = nums.size();
         // We need to test every subarray [i..n] from i = 0 to i = n,
         vector<int> res(n);
 
-        // Brute force approach
-        int maxBitwiseOr;
-        int bitwiseOr;
+        // Iterate backwards
+        // Track each bit of int with its earliest seen position
+        // Strictly speaking we should find the size dynamically, but we know from
+        // the problem constraints that nums[i] < 10^9. This can be represented in
+        // 30 digits (2^0 to 2^29, ie. max value (2^30)-1)
+        // we also happen to know that int = int32 for our compiler
+        constexpr int digits = 30;
+        array<int,digits> pos {0};
         int size;
-        for (int i = 0; i < n; i++)
+        for (int i = n-1; i >= 0; i--)
         {
-            bitwiseOr = 0;
-            maxBitwiseOr = -1;
-            size = 0;
-            for (int j = i; j < n; j++)
+            int val = nums[i];
+            for (int bitPosition = 0; val > 0 && bitPosition < digits; bitPosition++)
             {
-                bitwiseOr |= nums[j];
-                if (bitwiseOr > maxBitwiseOr)
+                if (val & 1)
                 {
-                    maxBitwiseOr = bitwiseOr;
-                    size = (j+1)-i;
+                    pos[bitPosition] = i;
                 }
+                val = val >> 1;
             }
+            // We now have an array of the earliest known location for each bit
+            // we've seen so far, so the subarray size required here is from i to
+            // max_element(pos)
+            size = *max_element(pos.begin(), pos.end()) + 1 - i;
             res[i] = size;
         }
 
@@ -65,7 +71,6 @@ int main(int argc, char* argv[])
     vector<int> exp = { 3,3,2,2,1 };
 
     Solution sol;
-    sol.DebugPrint = true;
     vector<int> res = sol.smallestSubarrays(nums);
 
     cout << "Input: nums = [";
