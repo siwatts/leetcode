@@ -56,7 +56,8 @@ public:
             // we've seen so far, so the subarray size required here is from i to
             // max_element(pos)
             size = *max_element(pos.begin(), pos.end()) + 1 - i;
-            res[i] = size;
+            // Can't have non-zero subarray, min 1
+            res[i] = max(1, size);
         }
 
         return res;
