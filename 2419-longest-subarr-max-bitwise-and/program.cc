@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -26,22 +27,44 @@ public:
     int longestSubarray(vector<int>& nums)
     {
         int maxVal = 0;
-        int maxCount = 0;
+        vector<int> maxCount;
+        bool maxPrev = false;
 
         for (auto& n: nums)
         {
             if (n > maxVal)
             {
+                // Found a new max value
+                // Start a new count vector
                 maxVal = n;
-                maxCount = 1;
+                maxCount.clear();
+                maxCount.push_back(1);
+                maxPrev = true;
             }
             else if (n == maxVal)
             {
-                maxCount++;
+                if (maxPrev)
+                {
+                    // Continuing a contiguous subarray of maxVal
+                    maxCount.back()++;
+                }
+                else
+                {
+                    // Starting a new contiguous subarray of maxVal
+                    maxCount.push_back(1);
+                    maxPrev = true;
+                }
+            }
+            else // n < maxVal
+            {
+                if (maxPrev)
+                {
+                    maxPrev = false;
+                }
             }
         }
 
-        return maxCount;
+        return *max_element(maxCount.begin(), maxCount.end());
     }
 };
 
