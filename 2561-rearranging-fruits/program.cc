@@ -53,7 +53,7 @@ public:
         //sort(basket1.begin(), basket1.end());
         //sort(basket2.begin(), basket2.end());
         vector<int> costToMove;
-        for (auto& [c,f] : costFreq)
+        for (auto& [c,f]: costFreq)
         {
             if (costFreqBasket1[c] != costFreqBasket2[c])
             {
@@ -86,9 +86,9 @@ int main(int argc, char* argv[])
 {
     cout << "2561-rearranging-fruits\n";
 
-    vector<int> basket1 { 4,2,2,2 };
-    vector<int> basket2 { 1,4,1,2 };
-    int exp = 1;
+    vector<int> basket1 { 84,80,43,8,80,88,43,14,100,88 };
+    vector<int> basket2 { 32,32,42,68,68,100,42,84,14,8 };
+    int exp = 48;
 
     cout << "Input: basket1 = [";
     for (auto& b: basket1)
