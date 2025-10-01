@@ -26,13 +26,19 @@ public:
         // Drink all initially
         int res = numBottles;
 
-        // If more empties than required for exchange, exchange all we can
+        // If more empties than required for exchange, exchange all we can iteratively
+        int full;
         do
         {
-            numBottles = numBottles / numExchange;
-            res += numBottles;
+            // How many we can get by exchange
+            full = numBottles / numExchange;
+            // How many in total we are left with = those from the exchange
+            // plus the remainder that weren't exchanged
+            numBottles = full + (numBottles % numExchange);
+            // Add new full to total
+            res += full;
         }
-        while (numBottles > 0);
+        while (full > 0);
 
         return res;
     }
