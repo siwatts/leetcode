@@ -24,23 +24,13 @@ class Solution
 public:
     int maxBottlesDrunk(int numBottles, int numExchange)
     {
-        int drank = 0;
-        int full = numBottles;
-        int empty = 0;
+        int drank = numBottles;
 
-        while (full > 0)
+        while (numBottles >= numExchange)
         {
-            drank += full;
-            empty += full;
-            full = 0;
-            // Calculate new possible full amount based on one exchange only
-            // because the price changes for every 1 bottle we swap
-            if (empty >= numExchange)
-            {
-                empty -= numExchange;
-                full = 1;
-                numExchange++;
-            }
+            drank++;
+            numBottles -= numExchange - 1; // Minus the 1 we get back in exchange and drink
+            numExchange++;
         }
 
         return drank;
