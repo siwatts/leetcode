@@ -37,9 +37,12 @@ public:
                             if (n != char2[c])
                                 anagram = false;
                         }
-                        index = i;
+                        if (anagram)
+                        {
+                            index = i;
+                            break;
+                        }
                     }
-                    break;
                 }
             }
             if (anagram)
