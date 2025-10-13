@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 using namespace std;
 
@@ -15,10 +16,29 @@ public:
             anagram = false;
             for (int i = 1; i < words.size(); i++)
             {
-                if (words[i] == words[i-1])
+                if (words[i].length() == words[i-1].length())
                 {
-                    anagram = true;
-                    index = i;
+                    // Check for anagram when length matches
+                    unordered_map<char,int> char1;
+                    for (char c : words[i])
+                    {
+                        char1[c]++;
+                    }
+                    unordered_map<char,int> char2;
+                    for (char c : words[i-1])
+                    {
+                        char2[c]++;
+                    }
+                    if (char1.size() == char2.size())
+                    {
+                        anagram = true;
+                        for (const auto& [c,n] : char1)
+                        {
+                            if (n != char2[c])
+                                anagram = false;
+                        }
+                        index = i;
+                    }
                     break;
                 }
             }
