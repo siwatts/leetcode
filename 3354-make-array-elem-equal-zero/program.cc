@@ -28,37 +28,32 @@ Return the number of possible valid selections.
 class Solution
 {
 public:
-    bool isValidSelection(vector<int> nums, int start, int dir)
+    int isValidSelection(vector<int> nums, int start)
     {
-        int curr = start;
         int N = nums.size();
-        while (curr >= 0 && curr < N)
+        // If the sum of elements left + right of start are equal, we
+        // can start in either direction and will reduce them all to 0
+        // by bouncing between them
+        // If one side is +/-1 of the other, we must start in that direction
+        // specifically so only one dir. is valid
+        int sumLeft = 0;
+        int sumRight = 0;
+        for (int i = 0; i < start; i++)
         {
-            if (nums[curr] == 0)
-            {
-                curr += dir;
-            }
-            else if (nums[curr] > 0)
-            {
-                nums[curr]--;
-                dir *= -1;
-                curr += dir;
-            }
-            else
-            {
-                throw runtime_error("nums[curr] < 0");
-            }
+            sumLeft += nums[i];
+        }
+        for (int i = start + 1; i < N; i++)
+        {
+            sumRight += nums[i];
         }
 
-        // Check whether resulting array is all 0
-        for (auto& n : nums)
-        {
-            if (n != 0)
-            {
-                return false;
-            }
-        }
-        return true;
+        int diff = abs(sumLeft - sumRight);
+        if (diff == 0)
+            return 2;
+        else if (diff == 1)
+            return 1;
+        else
+            return 0;
     }
     int countValidSelections(vector<int>& nums)
     {
@@ -72,13 +67,7 @@ public:
 
         for (int& st : starts)
         {
-            // Test left and right
-            int dir = -1;
-            if (isValidSelection(nums, st, dir))
-                validCount++;
-            dir = 1;
-            if (isValidSelection(nums, st, dir))
-                validCount++;
+            validCount += isValidSelection(nums, st);
         }
 
         return validCount;
