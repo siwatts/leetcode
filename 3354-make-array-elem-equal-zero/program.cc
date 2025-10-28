@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 using namespace std;
 
@@ -57,17 +58,41 @@ public:
     }
     int countValidSelections(vector<int>& nums)
     {
-        vector<int> starts;
+        unordered_map<int,int> starts;
+        bool adjacentToStart = false;
+        int prev;
         int validCount = 0;
         for (int i = 0; i < nums.size(); i++)
         {
             if (nums[i] == 0)
-                starts.push_back(i);
+            {
+                if (!adjacentToStart)
+                {
+                    // Only add it if we aren't already next to another 0
+                    // because we only need to try one 0 from a row of 0s
+                    starts.insert({i, 1});
+                    adjacentToStart = true;
+                    prev = i;
+                }
+                else
+                {
+                    // Add it to the count, because we won't check it but
+                    // need to multiply the valid count by how many consecutive
+                    // 0s there are
+                    starts[prev]++;
+                }
+            }
+            else
+            {
+                adjacentToStart = false;
+            }
         }
 
-        for (int& st : starts)
+        for (auto& [curr, adj] : starts)
         {
-            validCount += isValidSelection(nums, st);
+            // Multiply result by the number of adjacent 0s to chosen curr, since
+            // we will only test 1
+            validCount += adj * isValidSelection(nums, curr);
         }
 
         return validCount;
