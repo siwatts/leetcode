@@ -21,13 +21,19 @@ public:
         // E.g. for n = 5, binary 0101, we get pow = 2 corresponding to 0100
         int pow = (int)log2(n);
 
-        int x = 1;
-        for (int i = 0; i < pow; i++)
-        {
-            // Shift left and fill with 1s as we go
-            x = x << 1;
-            x = x | 1;
-        }
+        // // Bitwise construction:
+        // int x = 1;
+        // for (int i = 0; i < pow; i++)
+        // {
+        //     // Shift left and fill with 1s as we go
+        //     x = x << 1;
+        //     x = x | 1;
+        // }
+
+        // Mathematical construction:
+        // The result we want will then be 1 less than the next power of 2
+        // E.g. to get 0111 we can subtract 1 from 1000
+        int x = std::pow(2, pow+1) - 1;
 
         return x;
     }
