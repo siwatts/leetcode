@@ -16,7 +16,7 @@ array of size two containing the two numbers (in any order), so peace can return
 to Digitville.
 */
 
-class Solution
+class GeneralSolution
 {
 public:
     vector<int> getSneakyNumbers(vector<int>& nums)
@@ -33,6 +33,38 @@ public:
                 res.push_back(n);
         }
 
+        return res;
+    }
+};
+
+class Solution
+{
+public:
+    vector<int> getSneakyNumbers(vector<int>& nums)
+    {
+        // Optimised solution
+        // We can exploit the fact that the numbers in the array are always 0 to n-1
+        // and the fact that there are always exactly 2 duplicates
+        //
+        // Store in an array with n elements, and abandon the search when we find 2
+
+        // What is n
+        // Without the duplicates it would be nums.size()
+        int n = nums.size() - 2;
+        vector<int> counts(n);
+
+        vector<int> res;
+        for (auto& x: nums)
+        {
+            if (counts[x] > 0)
+            {
+                res.push_back(x);
+                // Cap at 2 for efficiency
+                if (res.size() == 2)
+                    return res;
+            }
+            counts[x]++;
+        }
         return res;
     }
 };
