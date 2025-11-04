@@ -56,6 +56,7 @@ public:
                 });
 
         int res = 0;
+        x = min(x, (int)numFreqSorted.size());
         for (int i = 0; i < x; i++)
         {
             res += numFreqSorted[i].first * numFreqSorted[i].second;
