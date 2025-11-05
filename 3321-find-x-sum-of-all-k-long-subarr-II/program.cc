@@ -28,13 +28,39 @@ class SumBuilder
 {
 private:
     int x;
-    int count;
     unordered_map<int, long long> numFreq;
     // The key is the freq!
     // The map is sorted so the minFreq is the first key
     map<long long, set<int>> freqToNum;
+    map<long long, set<int>> topFreqToNum;
+    int count = 0;
+    long long sum;
+    void ExtractTopFreq()
+    {
+        // Extract the top x entries, and keep a rolling sum
+        while (count < x && freqToNum.size() > 0)
+        {
+            // Extract highest freq.
+            auto it = freqToNum.rbegin(); // freq, set_of_num pair
+            long long freq = it->first;
+            while (count < x && it->second.size() > 0)
+            {
+                // Extract highest num first, from freq if more than 1
+                int num = *(it->second.rbegin());
+                it->second.erase(num);
+                topFreqToNum[freq].insert(num);
+                sum += num * freq;
+                count++;
+            }
+            if (it->second.size() == 0)
+            {
+                // Don't leave behind a frequency entry with an empty set
+                freqToNum.erase(freq);
+            }
+        }
+    }
 public:
-    SumBuilder(int x, vector<int>& numsSubarr) : x(x), count(0)
+    SumBuilder(int x, vector<int>& numsSubarr) : x(x), sum(0)
     {
         for (auto& n : numsSubarr)
         {
@@ -45,47 +71,71 @@ public:
         {
             freqToNum[f].insert(n);
         }
+
+        // Pull top frequencies and a rolling sum
+        ExtractTopFreq();
     }
     void Remove(int num)
     {
+        // Remove from numFreq array
+        // Remove from top or ordinary freq array
+        // Add another to top in replacement if necessary
         long long oldFreq = numFreq[num];
         numFreq[num]--;
-        freqToNum[oldFreq].erase(num);
+        if (topFreqToNum[oldFreq].erase(num))
+        {
+            // It was in the top x, keep track and resync
+            sum -= num * oldFreq;
+            count--;
+        }
+        else
+        {
+            freqToNum[oldFreq].erase(num);
+        }
+        // Replace it
         if (oldFreq > 1)
         {
-            freqToNum[oldFreq-1].insert(num);
+            freqToNum[oldFreq - 1].insert(num);
         }
+        // Re-sync the top x and sum (it might be this modified record or a new different one)
+        ExtractTopFreq();
     }
     void Add(int num)
     {
+        // Add to the numFreq array
+        // Add to top or ordinary freq array, removing another from top if necessary
         numFreq[num]++;
-        long long newFreq = numFreq[num];
-        if (newFreq > 1)
+        long long oldFreq = numFreq[num] - 1;
+        if (oldFreq > 0)
         {
-            freqToNum[newFreq-1].erase(num);
+            // There is an old record to remove
+            if (topFreqToNum[oldFreq].erase(num))
+            {
+                sum -= num * oldFreq;
+                count--;
+            }
+            else
+            {
+                freqToNum[oldFreq].erase(num);
+                // Also remove the smallest top element because we might be bigger than it now
+                auto it = topFreqToNum.begin();
+                for (auto& setNum: it->second)
+                {
+                    freqToNum[it->first].insert(setNum);
+                    sum -= it->first * setNum;
+                }
+                topFreqToNum.erase(it);
+                count--;
+            }
         }
-        freqToNum[newFreq].insert(num);
+        // Add or replace it
+        freqToNum[oldFreq+1].insert(num);
+        // Re-sync the top x and sum
+        ExtractTopFreq();
     }
     long long Sum()
     {
-        // Take top x entries from the freq map
-        long long sum = 0;
-        int count = 0;
-        auto it = freqToNum.rbegin();
-        while (count < x && it != freqToNum.rend())
-        {
-            long long freq = it->first;
-            set<int> topNum = it->second;
-            auto it2 = topNum.rbegin();
-            while (count < x && it2 != topNum.rend())
-            {
-                sum += *it2 * freq;
-                count++;
-                it2++;
-            }
-            it++;
-        }
-        return sum;
+        return this->sum;
     }
 };
 
