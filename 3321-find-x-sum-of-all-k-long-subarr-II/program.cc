@@ -3,7 +3,6 @@
 #include <unordered_map>
 #include <map>
 #include <set>
-#include <algorithm>
 
 using namespace std;
 
@@ -34,9 +33,8 @@ private:
     map<long long, set<int>> topElements;
     // The map is sorted so the minFreq is the first key
 public:
-    SumBuilder(int x) : x(x)
+    SumBuilder(int x) : x(x), count(0)
     {
-        count = 0;
     }
     void Add(int num, long long freq)
     {
@@ -95,16 +93,11 @@ public:
 class Solution
 {
 private:
-    long long findXSum(vector<int>& nums, int x)
+    long long findXSum(int x, unordered_map<int,long long>& numFreq)
     {
         if (x == 0)
             return 0;
 
-        unordered_map<int,long long> numFreq;
-        for (auto& n: nums)
-        {
-            numFreq[n]++;
-        }
         // Keep only top x most frequent occurrences
         SumBuilder sb(x);
         for (auto& [n,f] : numFreq)
@@ -121,10 +114,27 @@ public:
         int answerSize = n - k + 1;
         vector<long long> res;
 
-        for (int i = 0; i < answerSize; i++)
+        // Initial i = 0, length k, case here
+        unordered_map<int, long long> numFreq;
+        vector<int> subVector(nums.begin(), nums.begin() + k);
+        for (auto& n: subVector)
         {
-            vector<int> subVector(nums.begin() + i, nums.begin() + i + k);
-            res.push_back(findXSum(subVector, x));
+            numFreq[n]++;
+        }
+        res.push_back(findXSum(x, numFreq));
+        // Re-use same map for efficiency
+        for (int i = 1; i < answerSize; i++)
+        {
+            // i = 0, k = 4, length = 5
+            //   x x x x o
+            // i = 1, k = 4, length = 5
+            //   o x x x x
+            //   Remove 0 (i - 1)
+            //   Add 4 (i + k - 1)
+            // Remove element i - 1, Add element i + k - 1
+            numFreq[nums[i-1]]--;
+            numFreq[nums[i+k-1]]++;
+            res.push_back(findXSum(x, numFreq));
         }
 
         return res;
