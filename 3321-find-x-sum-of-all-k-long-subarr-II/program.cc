@@ -140,9 +140,24 @@ int main(int argc, char* argv[])
 {
     cout << "3318-find-x-sum-of-all-k-long-subarr-I\n";
 
-    vector<int> nums = { 1,1,2,2,3,4,2,3 };
-    int k = 6;
-    int x = 2;
+    vector<int> nums;
+    int k;
+    int x;
+    if (argc > 3)
+    {
+        for (int i = 1; i < argc-2; i++)
+        {
+            nums.push_back(stoi(argv[i]));
+        }
+        k = stoi(argv[argc-2]);
+        x = stoi(argv[argc-1]);
+    }
+    else
+    {
+        nums = { 1,1,2,2,3,4,2,3 };
+        k = 6;
+        x = 2;
+    }
     cout << "Input: nums = [ ";
     for (auto& n: nums)
     {
