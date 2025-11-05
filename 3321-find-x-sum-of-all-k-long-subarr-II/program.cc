@@ -37,6 +37,18 @@ private:
     long long sum;
     void ExtractTopFreq()
     {
+        if (count > 0)
+        {
+            // Remove the smallest top element to resync after an Add
+            auto it = topFreqToNum.begin();
+            for (auto& setNum: it->second)
+            {
+                freqToNum[it->first].insert(setNum);
+                sum -= it->first * setNum;
+                count--;
+            }
+            topFreqToNum.erase(it);
+        }
         // Extract the top x entries, and keep a rolling sum
         while (count < x && freqToNum.size() > 0)
         {
@@ -144,9 +156,9 @@ public:
                 {
                     freqToNum[it->first].insert(setNum);
                     sum -= it->first * setNum;
+                    count--;
                 }
                 topFreqToNum.erase(it);
-                count--;
             }
         }
         // Add or replace it
@@ -212,9 +224,9 @@ int main(int argc, char* argv[])
     }
     else
     {
-        nums = { 1,1,2,2,3,4,2,3 };
-        k = 6;
-        x = 2;
+        nums = { 1,9,10,4 };
+        k = 2;
+        x = 1;
     }
     cout << "Input: nums = [ ";
     for (auto& n: nums)
