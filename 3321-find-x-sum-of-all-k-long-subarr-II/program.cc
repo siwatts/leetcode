@@ -32,7 +32,7 @@ private:
     int count;
     // The key is the freq!
     map<long long, set<int>> topElements;
-    long long minFreq;
+    // The map is sorted so the minFreq is the first key
 public:
     SumBuilder(int x) : x(x)
     {
@@ -42,44 +42,39 @@ public:
     {
         if (count < x)
         {
-            if (count == 0)
-            {
-                // Seed with an initial element
-                minFreq = freq;
-            }
-            else
-            {
-                minFreq = min(minFreq, freq);
-            }
-            // Keep the list of values
+            // Seeding first elements
             topElements[freq].insert(num);
             count++;
         }
-        else if (freq > minFreq)
+        else
         {
-            // TODO: We must replace a top entry
-            // TODO: But it may be a list of more than 1!
-            topElements[freq].insert(num);
-            if (topElements[minFreq].size() > 1)
+            long long minFreq = topElements.begin()->first;
+            if (freq > minFreq)
             {
-                // Remove the smallest, at the beginning of the sorted set
-                topElements[minFreq].erase(topElements[minFreq].begin());
-            }
-            else
-            {
-                // Remove this freq. entry entirely
-                topElements.erase(minFreq);
-                minFreq = freq;
-            }
-        }
-        else if (freq == minFreq)
-        {
-            // Special case where frequencies match, we keep the larger value in the set
-            int smallestNum = *topElements[freq].begin();
-            if (num > smallestNum)
-            {
-                topElements[freq].erase(smallestNum);
+                // We must replace the lowest frequency top entry seen so far
+                // But it may be a list of more than 1 number, so
+                // in that case remove the smallest value
+                if (topElements[minFreq].size() > 1)
+                {
+                    // Remove the smallest, at the beginning of the sorted set
+                    topElements[minFreq].erase(topElements[minFreq].begin());
+                }
+                else
+                {
+                    // Remove this freq. entry entirely
+                    topElements.erase(minFreq);
+                }
                 topElements[freq].insert(num);
+            }
+            else if (freq == minFreq)
+            {
+                // Special case where frequencies match, we keep the larger value in the set
+                int smallestNum = *topElements[freq].begin();
+                if (num > smallestNum)
+                {
+                    topElements[freq].erase(smallestNum);
+                    topElements[freq].insert(num);
+                }
             }
         }
     }
