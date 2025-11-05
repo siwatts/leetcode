@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <map>
+#include <set>
 #include <algorithm>
 
 using namespace std;
@@ -23,6 +25,78 @@ Return an integer array answer of length n - k + 1 where answer[i] is the x-sum
 of the subarray nums[i..i + k - 1].
 */
 
+class SumBuilder
+{
+private:
+    int x;
+    int count;
+    // The key is the freq!
+    map<long long, set<int>> topElements;
+    long long minFreq;
+public:
+    SumBuilder(int x) : x(x)
+    {
+        count = 0;
+    }
+    void Add(int num, long long freq)
+    {
+        if (count < x)
+        {
+            if (count == 0)
+            {
+                // Seed with an initial element
+                minFreq = freq;
+            }
+            else
+            {
+                minFreq = min(minFreq, freq);
+            }
+            // Keep the list of values
+            topElements[freq].insert(num);
+            count++;
+        }
+        else if (freq > minFreq)
+        {
+            // TODO: We must replace a top entry
+            // TODO: But it may be a list of more than 1!
+            topElements[freq].insert(num);
+            if (topElements[minFreq].size() > 1)
+            {
+                // Remove the smallest, at the beginning of the sorted set
+                topElements[minFreq].erase(topElements[minFreq].begin());
+            }
+            else
+            {
+                // Remove this freq. entry entirely
+                topElements.erase(minFreq);
+                minFreq = freq;
+            }
+        }
+        else if (freq == minFreq)
+        {
+            // Special case where frequencies match, we keep the larger value in the set
+            int smallestNum = *topElements[freq].begin();
+            if (num > smallestNum)
+            {
+                topElements[freq].erase(smallestNum);
+                topElements[freq].insert(num);
+            }
+        }
+    }
+    long long Sum()
+    {
+        long long res = 0;
+        for (auto& [f,ns] : topElements)
+        {
+            for (auto& n : ns)
+            {
+                res += n * f;
+            }
+        }
+        return res;
+    }
+};
+
 class Solution
 {
 private:
@@ -37,32 +111,13 @@ private:
             numFreq[n]++;
         }
         // Keep only top x most frequent occurrences
-        // So we need to sort numFreq by its value field
-        vector<pair<int,long long>> numFreqSorted;
+        SumBuilder sb(x);
         for (auto& [n,f] : numFreq)
         {
-            numFreqSorted.push_back({n,f});
-        }
-        sort(numFreqSorted.begin(), numFreqSorted.end(),
-                [](auto a, auto b) {
-                    if (a.second == b.second)
-                    {
-                        return a.first > b.first;
-                    }
-                    else
-                    {
-                        return a.second > b.second;
-                    }
-                });
-
-        long long res = 0;
-        x = min(x, (int)numFreqSorted.size());
-        for (int i = 0; i < x; i++)
-        {
-            res += numFreqSorted[i].first * numFreqSorted[i].second;
+            sb.Add(n, f);
         }
 
-        return res;
+        return sb.Sum();
     }
 public:
     vector<long long> findXSum(vector<int>& nums, int k, int x)
