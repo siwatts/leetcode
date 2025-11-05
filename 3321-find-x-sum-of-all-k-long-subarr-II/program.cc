@@ -82,15 +82,28 @@ public:
         // Add another to top in replacement if necessary
         long long oldFreq = numFreq[num];
         numFreq[num]--;
+        if (oldFreq == 1)
+        {
+            // Don't leave a 0 frequency entry behind
+            numFreq.erase(num);
+        }
         if (topFreqToNum[oldFreq].erase(num))
         {
             // It was in the top x, keep track and resync
             sum -= num * oldFreq;
             count--;
+            if (topFreqToNum[oldFreq].size() == 0)
+            {
+                topFreqToNum.erase(oldFreq);
+            }
         }
         else
         {
             freqToNum[oldFreq].erase(num);
+            if (freqToNum[oldFreq].size() == 0)
+            {
+                freqToNum.erase(oldFreq);
+            }
         }
         // Replace it
         if (oldFreq > 1)
@@ -113,10 +126,18 @@ public:
             {
                 sum -= num * oldFreq;
                 count--;
+                if (topFreqToNum[oldFreq].size() == 0)
+                {
+                    topFreqToNum.erase(oldFreq);
+                }
             }
             else
             {
                 freqToNum[oldFreq].erase(num);
+                if (freqToNum[oldFreq].size() == 0)
+                {
+                    freqToNum.erase(oldFreq);
+                }
                 // Also remove the smallest top element because we might be bigger than it now
                 auto it = topFreqToNum.begin();
                 for (auto& setNum: it->second)
@@ -164,8 +185,8 @@ public:
             //   Remove 0 (i - 1)
             //   Add 4 (i + k - 1)
             // Remove element i - 1, Add element i + k - 1
-            sb.Remove(nums[i-1]);
             sb.Add(nums[i+k-1]);
+            sb.Remove(nums[i-1]);
             res.push_back(sb.Sum());
         }
 
