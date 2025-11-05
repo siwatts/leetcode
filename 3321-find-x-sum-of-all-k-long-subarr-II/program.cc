@@ -25,26 +25,26 @@ of the subarray nums[i..i + k - 1].
 
 class Solution
 {
-public:
-    int findXSum(vector<int>& nums, int x)
+private:
+    long long findXSum(vector<int>& nums, int x)
     {
         if (x == 0)
             return 0;
 
-        unordered_map<int,int> numFreq;
+        unordered_map<int,long long> numFreq;
         for (auto& n: nums)
         {
             numFreq[n]++;
         }
         // Keep only top x most frequent occurrences
         // So we need to sort numFreq by its value field
-        vector<pair<int,int>> numFreqSorted;
+        vector<pair<int,long long>> numFreqSorted;
         for (auto& [n,f] : numFreq)
         {
             numFreqSorted.push_back({n,f});
         }
         sort(numFreqSorted.begin(), numFreqSorted.end(),
-                [](pair<int,int> a, pair<int,int> b) {
+                [](auto a, auto b) {
                     if (a.second == b.second)
                     {
                         return a.first > b.first;
@@ -55,7 +55,7 @@ public:
                     }
                 });
 
-        int res = 0;
+        long long res = 0;
         x = min(x, (int)numFreqSorted.size());
         for (int i = 0; i < x; i++)
         {
@@ -64,11 +64,12 @@ public:
 
         return res;
     }
-    vector<int> findXSum(vector<int>& nums, int k, int x)
+public:
+    vector<long long> findXSum(vector<int>& nums, int k, int x)
     {
         int n = nums.size();
         int answerSize = n - k + 1;
-        vector<int> res;
+        vector<long long> res;
 
         for (int i = 0; i < answerSize; i++)
         {
@@ -95,7 +96,7 @@ int main(int argc, char* argv[])
     cout << " ], k = " << k << ", x = " << x << "\n";
 
     Solution sol;
-    vector<int> res = sol.findXSum(nums, k, x);
+    vector<long long> res = sol.findXSum(nums, k, x);
     cout << "Output: res = [ ";
     for (auto& r: res)
     {
