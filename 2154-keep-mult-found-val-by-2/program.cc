@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <set>
+#include <unordered_set>
 
 using namespace std;
 
@@ -22,11 +22,7 @@ class Solution
 public:
     int findFinalValue(vector<int>& nums, int original)
     {
-        set<int> s;
-        for (auto& n: nums)
-        {
-            s.insert(n);
-        }
+        unordered_set<int> s(nums.begin(), nums.end());
 
         while (s.contains(original))
         {
