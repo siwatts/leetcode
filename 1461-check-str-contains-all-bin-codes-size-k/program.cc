@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <cmath>
 
 using namespace std;
 
@@ -14,15 +13,15 @@ class Solution
 private:
     int binaryStringToInt(string s)
     {
-        int exp = 0;
+        int powerOfTwo = 1;
         int res = 0;
         for (auto it = s.rbegin(); it != s.rend(); it++)
         {
             if (*it == '1')
             {
-                res += pow(2,exp);
+                res += powerOfTwo;
             }
-            exp++;
+            powerOfTwo = powerOfTwo << 1;
         }
         return res;
     }
