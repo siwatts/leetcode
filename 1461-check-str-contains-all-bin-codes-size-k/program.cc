@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
+#include <ranges>
 
 using namespace std;
 
@@ -14,20 +16,27 @@ private:
     vector<string> getCodesSizeK(int k)
     {
         vector<string> c;
-        if (k == 1)
+        // Every binary number of length k, will be the decimal numbers
+        // 0 to (2^k)-1, inclusive
+        for (int i : std::views::iota(0, pow(2,k)-1))
         {
-            c = { "0", "1" };
-        }
-        else
-        {
-            auto temp = getCodesSizeK(k - 1);
-            for (auto& t : temp)
-            {
-                c.push_back("0" + t);
-                c.push_back("1" + t);
-            }
+            c.push_back(toBinary(i, k));
         }
         return c;
+    }
+    string toBinary(int n, int k)
+    {
+        string s(k, '0');
+        // String may be backwards but that doesn't matter
+        for (int i = 0; i < k; i++)
+        {
+            if (n & 1)
+            {
+                s[i] = '1';
+            }
+            n = n >> 1;
+        }
+        return s;
     }
 public:
     bool hasAllCodes(string s, int k)
