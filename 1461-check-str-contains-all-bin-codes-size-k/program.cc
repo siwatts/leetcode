@@ -18,7 +18,7 @@ private:
         vector<string> c;
         // Every binary number of length k, will be the decimal numbers
         // 0 to (2^k)-1, inclusive
-        for (int i : std::views::iota(0, pow(2,k)-1))
+        for (int i : std::views::iota(0, pow(2,k)))
         {
             c.push_back(toBinary(i, k));
         }
