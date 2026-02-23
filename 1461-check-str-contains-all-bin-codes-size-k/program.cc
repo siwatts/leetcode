@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include <ranges>
 
 using namespace std;
 
@@ -33,12 +32,8 @@ public:
         if (k >= s.size())
             return false;
 
-        int N = pow(2,k);
-        bool found[N];
-        for (int i = 0; i < N; i++)
-        {
-            found[i] = false;
-        }
+        int N = 1 << k;
+        vector<bool> found(N, false);
         // Scan string once
         for (int i = 0; i < s.size()+1-k; i++)
         {
