@@ -13,43 +13,43 @@ length k is a substring of s. Otherwise, return false.
 class Solution
 {
 private:
-    vector<string> getCodesSizeK(int k)
+    int binaryStringToInt(string s)
     {
-        vector<string> c;
-        // Every binary number of length k, will be the decimal numbers
-        // 0 to (2^k)-1, inclusive
-        for (int i : std::views::iota(0, pow(2,k)))
+        int exp = 0;
+        int res = 0;
+        for (auto it = s.rbegin(); it != s.rend(); it++)
         {
-            c.push_back(toBinary(i, k));
-        }
-        return c;
-    }
-    string toBinary(int n, int k)
-    {
-        string s(k, '0');
-        // String may be backwards but that doesn't matter
-        for (int i = 0; i < k; i++)
-        {
-            if (n & 1)
+            if (*it == '1')
             {
-                s[i] = '1';
+                res += pow(2,exp);
             }
-            n = n >> 1;
+            exp++;
         }
-        return s;
+        return res;
     }
 public:
     bool hasAllCodes(string s, int k)
     {
-        if (k > s.size())
+        if (k >= s.size())
             return false;
 
-        vector<string> codes = getCodesSizeK(k);
-        int pos;
-        for (auto& c: codes)
+        int N = pow(2,k);
+        bool found[N];
+        for (int i = 0; i < N; i++)
         {
-            pos = s.find(c);
-            if (pos == string::npos)
+            found[i] = false;
+        }
+        // Scan string once
+        for (int i = 0; i < s.size()+1-k; i++)
+        {
+            // Log this substring as found
+            int dec = binaryStringToInt(s.substr(i, k));
+            found[dec] = true;
+        }
+        // Are we missing any numbers
+        for (int i = 0; i < N; i++)
+        {
+            if (!found[i])
                 return false;
         }
         return true;
