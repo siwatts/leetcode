@@ -52,12 +52,16 @@ class Solution
 public:
     vector<int> sortByBits(vector<int>& arr)
     {
-        vector<Record> records = arr | views::transform([](int x) { return Record(x); }) | ranges::to<vector>();
+        vector<Record> records = arr |
+            views::transform([](int x) { return Record(x); }) |
+            ranges::to<vector>();
         // ranges::to is C++23 only
 
         sort(records.begin(), records.end());
 
-        vector<int> result = records | views::transform([](Record r) { return r.val; }) | ranges::to<vector>();
+        vector<int> result = records |
+            views::transform(&Record::val) |
+            ranges::to<vector>();
         return result;
     }
 };
