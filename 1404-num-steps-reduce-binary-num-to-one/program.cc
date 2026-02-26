@@ -29,6 +29,7 @@ public:
             if (s[N-1] == '0')
             {
                 // Even, divide by 2
+                // 110 -> 11
                 s.erase(N-1, string::npos);
             }
             else
@@ -37,14 +38,18 @@ public:
                 unsigned long long pos = s.find_last_of('0');
                 if (pos == string::npos)
                 {
+                    // All 1s, so 1 + N 0s
+                    // 111 -> 1000
                     s = '1' + string(N, '0');
                 }
                 else
                 {
-
+                    // Replace 0 at pos with 1
                     s[pos] = '1';
                     // Replace all 1s after pos with 0s
                     // There are N-pos-1 char. after pos
+                    // 10101 -> 10110
+                    // 10111 -> 11000
                     s.erase(pos+1, string::npos);
                     s.append(string(N-pos-1, '0'));
                 }
