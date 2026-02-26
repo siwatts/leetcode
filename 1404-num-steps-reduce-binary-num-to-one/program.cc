@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -17,29 +18,44 @@ class Solution
 public:
     int numSteps(string s)
     {
-        int pow2 = 1;
-        int num = 0;
-        for (auto it = s.rbegin(); it != s.rend(); it++)
-        {
-            if (*it == '1')
-                num += pow2;
-            pow2 <<= 1;
-        }
-
+        // Process as a string
+        // Exploit binary number represenation
+        // If even (last digit is 0), divide by 2 (shift to right by 1)
+        // Else add 1 (binary addition)
         int steps = 0;
-        while (num > 1)
+        while (s.size() > 1)
         {
-            if (num % 2 == 0)
+            unsigned long long N = s.size();
+            if (s[N-1] == '0')
             {
-                num /= 2;
+                // Even, divide by 2
+                s.erase(N-1, string::npos);
             }
             else
             {
-                num++;
+                // Odd, add 1
+                unsigned long long pos = s.find_last_of('0');
+                if (pos == string::npos)
+                {
+                    s = '1' + string(N, '0');
+                }
+                else
+                {
+
+                    s[pos] = '1';
+                    // Replace all 1s after pos with 0s
+                    // There are N-pos-1 char. after pos
+                    s.erase(pos+1, string::npos);
+                    s.append(string(N-pos-1, '0'));
+                }
             }
             steps++;
         }
-
+        if (s != "1")
+        {
+            cout << "Didn't end up with a 1\n";
+            return -1;
+        }
         return steps;
     }
 };
