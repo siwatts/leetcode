@@ -23,14 +23,14 @@ public:
         // If even (last digit is 0), divide by 2 (shift to right by 1)
         // Else add 1 (binary addition)
         int steps = 0;
-        while (s.size() > 1)
+        unsigned long long N = s.size();
+        while (N > 1)
         {
-            unsigned long long N = s.size();
-            if (s[N-1] == '0')
+            if (*s.rbegin() == '0')
             {
                 // Even, divide by 2
-                // 110 -> 11
-                s.erase(N-1, string::npos);
+                // e.g. 110 -> 11
+                s.pop_back();
             }
             else
             {
@@ -38,8 +38,8 @@ public:
                 unsigned long long pos = s.find_last_of('0');
                 if (pos == string::npos)
                 {
-                    // All 1s, so 1 + N 0s
-                    // 111 -> 1000
+                    // All 1s, so replace with 1 + N*0s
+                    // e.g. 111 -> 1000
                     s = '1' + string(N, '0');
                 }
                 else
@@ -48,13 +48,18 @@ public:
                     s[pos] = '1';
                     // Replace all 1s after pos with 0s
                     // There are N-pos-1 char. after pos
-                    // 10101 -> 10110
-                    // 10111 -> 11000
+                    // e.g. 10101 -> 10110
+                    // e.g. 10111 -> 11000
                     s.erase(pos+1, string::npos);
-                    s.append(string(N-pos-1, '0'));
+                    //s.append(string(N-pos-1, '0'));
+                    // Optimisation: Actually why bother appending X 0s when we're
+                    // just going to remove them one by one anyway, advance steps
+                    // by X instead
+                    steps += N-pos-1;
                 }
             }
             steps++;
+            N = s.size();
         }
         if (s != "1")
         {
