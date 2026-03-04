@@ -20,54 +20,60 @@ public:
         // N rows, M cols
         int N = mat.size();
         int M = mat[0].size();
-        // cout << "DEBUG: N = " << N << ", M = " << M << "\n";
-        // Count the 1s in each row & column combination
-        // Special positions are those where for a given i,j count == 1
+        // Lets find some candidate rows and columns that only contain one 1
         unordered_map<int,int> candidateRows;
         unordered_map<int,int> candidateCols;
         for (int i = 0; i < N; i++)
         {
-            int count = 0;
+            bool cand = false;
             int pos;
+            // Scan this row
             for (int j = 0; j < M; j++)
             {
                 if (mat[i][j] == 1)
                 {
-                    count++;
-                    pos = j;
+                    if (!cand)
+                    {
+                        cand = true;
+                        pos = j;
+                    }
+                    else // found > 1 so stop here
+                    {
+                        cand = false;
+                        break;
+                    }
                 }
             }
-            if (count == 1)
-            {
-                // This row contains a possible special position
+            if (cand)
                 candidateRows[i] = pos;
-            }
             else
-            {
                 candidateRows[i] = -1;
-            }
         }
         for (int j = 0; j < M; j++)
         {
-            int count = 0;
+            bool cand = false;
             int pos;
+            // Scan this column
             for (int i = 0; i < N; i++)
             {
                 if (mat[i][j] == 1)
                 {
-                    count++;
-                    pos = i;
+                    if (!cand)
+                    {
+                        cand = true;
+                        pos = i;
+                    }
+                    else // found > 1 so stop here
+                    {
+                        cand = false;
+                        break;
+                    }
                 }
             }
-            if (count == 1)
-            {
-                // This column contains a possible special position
+            if (cand)
                 candidateCols[j] = pos;
-            }
             else
-            {
                 candidateCols[j] = -1;
-            }
         }
         int special = 0;
         for (auto& row: candidateRows)
@@ -76,9 +82,9 @@ public:
             {
                 // Row 'row.first' contains a candidate special value at
                 // column 'row.second', is the inverse true?
-                int r = row.first;
-                int c = row.second;
-                if (candidateCols[c] == r)
+                int i = row.first;
+                int j = row.second;
+                if (candidateCols[j] == i)
                 {
                     special++;
                 }
