@@ -47,6 +47,10 @@ public:
             if (cand)
                 candidateRows[i] = pos;
         }
+        if (candidateRows.size() == 0)
+        {
+            return 0;
+        }
         for (int j = 0; j < M; j++)
         {
             bool cand = false;
