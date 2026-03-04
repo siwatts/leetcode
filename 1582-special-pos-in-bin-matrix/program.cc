@@ -46,8 +46,6 @@ public:
             }
             if (cand)
                 candidateRows[i] = pos;
-            else
-                candidateRows[i] = -1;
         }
         for (int j = 0; j < M; j++)
         {
